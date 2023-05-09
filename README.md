@@ -1,2 +1,2 @@
 ## Hello World
-This repo demonstrates how to use GCP Cloud Build
+This repo demonstrates how to use GCP Cloud Build and Run
