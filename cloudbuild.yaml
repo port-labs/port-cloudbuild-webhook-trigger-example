@@ -20,7 +20,7 @@ steps:
 substitutions:
     #Repository Specific configuration. DevOps can change this settings
     _REPOSITORY: port-demo
-    _IMAGE_NAME: port-demo-image
+    _IMAGE_NAME: $(body.payload.image_name)
     
 options:
     substitution_option: 'ALLOW_LOOSE'
