@@ -1,5 +1,25 @@
+# steps:
+# - name: 'gcr.io/cloud-builders/docker'
+#   args: [ 'build', '-t', 'us-west2-docker.pkg.dev/portdemo-386215/port-demo/quickstart-image:latest', '.' ]
+# images:
+# - 'us-west2-docker.pkg.dev/portdemo-386215/port-demo/quickstart-image:latest'
+
 steps:
+# Build the container image
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'us-west2-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}:${SHORT_SHA}', '.']
+  id: Building the container image
+# Push the container image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '-t', 'us-west2-docker.pkg.dev/portdemo-386215/port-demo/quickstart-image:tag1', '.' ]
-images:
-- 'us-west2-docker.pkg.dev/portdemo-386215/port-demo/quickstart-image:tag1'
+  args: ['push', 'us-west2-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}:${SHORT_SHA}']
+  id: Pushing the image to registry
+# Deploy container image to Cloud Run
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['run', 'deploy', '${_SERVICE_NAME}', '--image', 'us-west2-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}:${SHORT_SHA}', '--region', 'us-west2', '--platform', 'managed', "--allow-unauthenticated"]
+
+substitutions:
+    #Repository Specific configuration. DevOps can change this settings
+    _SERVICE_NAME: port-cloud-build    
+    
+options:
+    substitution_option: 'ALLOW_LOOSE'
