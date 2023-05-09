@@ -7,19 +7,20 @@
 steps:
 # Build the container image
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'us-west2-docker.pkg.dev/$PROJECT_ID/${_CONTAINER_NAME}:${SHORT_SHA}', '.']
+  args: ['build', '-t', 'us-west2-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}:${SHORT_SHA}', '.']
   id: Building the container image
 # Push the container image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'us-west2-docker.pkg.dev/$PROJECT_ID/${_CONTAINER_NAME}:${SHORT_SHA}']
+  args: ['push', 'us-west2-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:${SHORT_SHA}']
   id: Pushing the image to registry
 # Deploy container image to Cloud Run
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['run', 'deploy', '${_CONTAINER_NAME}', '--image', 'us-west2-docker.pkg.dev/$PROJECT_ID/${_CONTAINER_NAME}:${SHORT_SHA}', '--region', 'us-west2', '--platform', 'managed', "--allow-unauthenticated"]
+  args: ['run', 'deploy', '${_IMAGE_NAME}', '--image', 'us-west2-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:${SHORT_SHA}', '--region', 'us-west2', '--platform', 'managed', "--allow-unauthenticated"]
 
 substitutions:
     #Repository Specific configuration. DevOps can change this settings
-    _CONTAINER_NAME: port-demo   
+    _REPOSITORY: port-demo
+    _IMAGE_NAME: port-demo
     
 options:
     substitution_option: 'ALLOW_LOOSE'
