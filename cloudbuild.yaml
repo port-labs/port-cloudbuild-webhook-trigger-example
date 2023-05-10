@@ -1,9 +1,3 @@
-# steps:
-# - name: 'gcr.io/cloud-builders/docker'
-#   args: [ 'build', '-t', 'us-west2-docker.pkg.dev/portdemo-386215/port-demo/quickstart-image:latest', '.' ]
-# images:
-# - 'us-west2-docker.pkg.dev/portdemo-386215/port-demo/quickstart-image:latest'
-
 steps:
 # Build the container image
 - name: gcr.io/cloud-builders/docker
